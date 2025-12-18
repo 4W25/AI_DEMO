@@ -1,4 +1,4 @@
-# 專案規則檔（.NET 9 C# Web API）
+# 專案規則檔（.NET 9 C# Web）
 
 這是本專案的開發規範，請 Copilot 在產生程式碼、重構或解釋時遵循以下規則。
 
@@ -11,7 +11,7 @@
 
 ## 專案概述
 
-本專案是一個 ASP.NET Core 9 Web API，提供後端服務給前端應用程式。
+本專案是一個 ASP.NET Core 9 Web，提供使用者管理功能。
 
 ### 主要功能
 
@@ -23,8 +23,8 @@
 ### 技術堆疊
 
 - **語言**：C# 13+（.NET 9）
-- **框架**：ASP.NET Core 9（Web API）
-- **資料存取**：Entity Framework Core 9，使用 SQL Server
+- **框架**：ASP.NET Core 9 Web
+- **資料存取**：Entity Framework Core 9，使用 SQLite
 - **架構**：Clean Architecture（分層：Application、Domain、Infrastructure、Web）
 - **依賴注入**：使用內建 DI 容器
 - **驗證**：FluentValidation 12+
