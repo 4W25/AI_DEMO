@@ -73,4 +73,21 @@ public interface IUserRepository
     /// <param name="cancellationToken">取消操作的令牌。</param>
     /// <returns>表示操作完成的 Task。</returns>
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// 取得使用者總數。
+    /// </summary>
+    /// <param name="cancellationToken">取消操作的令牌。</param>
+    /// <returns>使用者總數。</returns>
+    Task<int> GetTotalCountAsync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// 檢查指定的帳號名稱或電子郵件是否已存在於系統（排除指定使用者）。
+    /// </summary>
+    /// <param name="username">帳號名稱。</param>
+    /// <param name="email">電子郵件地址。</param>
+    /// <param name="excludeUserId">排除的使用者 ID。</param>
+    /// <param name="cancellationToken">取消操作的令牌。</param>
+    /// <returns>若帳號名稱或電子郵件已存在則返回 true，否則 false。</returns>
+    Task<bool> ExistsAsync(string username, string email, Guid excludeUserId, CancellationToken cancellationToken);
 }

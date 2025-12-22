@@ -6,6 +6,7 @@ using AI_DEMO.Domain.Enums;
 /// 使用者實體，代表系統中的一個使用者帳號。
 /// 此類別封裝了使用者的基本資訊與狀態變更邏輯。
 /// </summary>
+#pragma warning disable CS8618 // 停用 EF Core 實體的非 null 屬性警告
 public class User
 {
     /// <summary>

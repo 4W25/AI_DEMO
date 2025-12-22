@@ -1,0 +1,157 @@
+@model AI_DEMO.Application.Features.UserManagement.Commands.CreateUserCommand
+
+@{
+    ViewData["Title"] = "新增使用者";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>新增使用者</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">首頁</a></li>
+                        <li class="breadcrumb-item"><a href="/User">使用者管理</a></li>
+                        <li class="breadcrumb-item active">新增使用者</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">新增使用者</h3>
+            </div>
+            <!-- /.card-header -->
+            <form asp-action="Create" method="post" id="createForm">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label asp-for="Username">帳號</label>
+                        <input asp-for="Username" class="form-control" placeholder="輸入帳號" required />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                        <small class="form-text text-muted">帳號長度 3-50 字元，僅允許英數字與底線。</small>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email">電子郵件</label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="輸入電子郵件" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password">密碼</label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="輸入密碼" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                        <small class="form-text text-muted">密碼至少 8 字元，需包含大小寫字母與數字。</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="ConfirmPassword">確認密碼</label>
+                        <input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" placeholder="再次輸入密碼" required />
+                        <span id="confirmPasswordError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Role">角色</label>
+                        <select asp-for="Role" class="form-control" required>
+                            <option value="">請選擇角色</option>
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success">儲存</button>
+                    <a href="/User" class="btn btn-secondary">返回列表</a>
+                </div>
+            </form>
+        </div>
+        <!-- /.card -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // 初始化 jQuery Validation
+            $('#createForm').validate({
+                rules: {
+                    Username: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 50,
+                        pattern: /^[a-zA-Z0-9_]+$/
+                    },
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+                    Password: {
+                        required: true,
+                        minlength: 8,
+                        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/
+                    },
+                    ConfirmPassword: {
+                        required: true,
+                        equalTo: '#Password'
+                    },
+                    Role: {
+                        required: true
+                    }
+                },
+                messages: {
+                    Username: {
+                        required: '請輸入帳號',
+                        minlength: '帳號長度至少 3 字元',
+                        maxlength: '帳號長度不可超過 50 字元',
+                        pattern: '帳號僅允許英數字與底線'
+                    },
+                    Email: {
+                        required: '請輸入電子郵件',
+                        email: '請輸入有效的電子郵件地址'
+                    },
+                    Password: {
+                        required: '請輸入密碼',
+                        minlength: '密碼長度至少 8 字元',
+                        pattern: '密碼必須包含大小寫字母與數字'
+                    },
+                    ConfirmPassword: {
+                        required: '請確認密碼',
+                        equalTo: '密碼確認必須與密碼相同'
+                    },
+                    Role: {
+                        required: '請選擇角色'
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    error.insertAfter(element);
+                }
+            });
+
+            // 密碼強度提示（簡單實作）
+            $('#Password').on('input', function() {
+                var password = $(this).val();
+                var strength = 0;
+                if (password.length >= 8) strength++;
+                if (/[a-z]/.test(password)) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/\d/.test(password)) strength++;
+
+                var strengthText = '';
+                if (strength < 2) strengthText = '弱';
+                else if (strength < 4) strengthText = '中';
+                else strengthText = '強';
+
+                $('#passwordStrength').remove();
+                $(this).after('<small id="passwordStrength" class="form-text">密碼強度: ' + strengthText + '</small>');
+            });
+        });
+    </script>
+}

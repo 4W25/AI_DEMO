@@ -1,19 +1,19 @@
-# 專案規則檔（.NET 9 C# Web）
+# 專案規則檔（.NET 10 C# Web）
 
 這是本專案的開發規範，請 Copilot 在產生程式碼、重構或解釋時遵循以下規則。
 
 ## 基本指示
 
 - 回應一律使用**繁體中文**。
-- 程式碼範例使用 C# 語法，並符合 .NET 9 的慣例。
+- 程式碼範例使用 C# 語法，並符合 .NET 10 的慣例。
 - 若建議的變更超過 200 行，請先提出變更計畫，並詢問「我打算這樣改，您覺得如何？」。
 - 不要引入專案中未使用的 NuGet 套件，除非明確要求。
 
 ## 專案概述
 
-本專案是一個 ASP.NET Core 9 Web，提供使用者管理功能。
+本專案是一個 ASP.NET Core 10 Web，提供使用者管理功能。目前處於早期開發階段，僅實作了 Domain 層。Application、Infrastructure、Web 層及測試專案尚未實作。
 
-### 主要功能
+### 主要功能（規劃中）
 
 - 使用者管理（註冊、登入、權限）
 - 資料 CRUD 操作
@@ -22,23 +22,23 @@
 
 ### 技術堆疊
 
-- **語言**：C# 13+（.NET 9）
-- **框架**：ASP.NET Core 9 Web
-- **資料存取**：Entity Framework Core 9，使用 SQLite
+- **語言**：C# 13+（.NET 10）
+- **框架**：ASP.NET Core 10 Web
+- **資料存取**：Entity Framework Core 10，使用 SQLite（規劃中）
 - **架構**：Clean Architecture（分層：Application、Domain、Infrastructure、Web）
 - **依賴注入**：使用內建 DI 容器
-- **驗證**：FluentValidation 12+
-- **中介層**：MediatR 12+（Commands/Queries）
-- **測試**：xUnit 2.5+、Moq、FluentAssertions
+- **驗證**：FluentValidation 12+（規劃中）
+- **中介層**：MediatR 12+（Commands/Queries，規劃中）
+- **測試**：xUnit 2.5+、Moq、FluentAssertions（規劃中）
 - **格式化**：EditorConfig + .NET Formatting
 
 ## 專案結構與角色
 
-專案採用 Clean Architecture 分層，目錄結構如下：
+專案採用 Clean Architecture 分層，目錄結構如下（目前僅 Domain 層實作）：
 
 ```
 src/
-├── Application/          # 應用邏輯（Commands、Queries、Handlers、Validators）
+├── Application/          # 應用邏輯（Commands、Queries、Handlers、Validators） - 尚未實作
 │   ├── Commands/
 │   ├── Queries/
 │   ├── Handlers/
@@ -47,19 +47,19 @@ src/
 │   ├── Entities/
 │   ├── ValueObjects/
 │   └── Interfaces/
-├── Infrastructure/       # 基礎設施（EF Core、Authentication、External Services）
+├── Infrastructure/       # 基礎設施（EF Core、Authentication、External Services） - 尚未實作
 │   ├── Data/
 │   ├── Identity/
 │   └── Services/
-└── Web/                  # API 層（Controllers、DTOs、Filters、Startup）
+└── Web/                  # API 層（Controllers、DTOs、Filters、Startup） - 尚未實作
     ├── Controllers/
     ├── DTOs/
     ├── Filters/
     └── Program.cs
 tests/
-├── Application.Tests/    # 應用層測試
-├── Domain.Tests/         # 領域層測試
-└── Web.Tests/            # API 層整合測試
+├── Application.Tests/    # 應用層測試 - 尚未實作
+├── Domain.Tests/         # 領域層測試 - 尚未實作
+└── Web.Tests/            # API 層整合測試 - 尚未實作
 ```
 
 - 新增功能時，請依功能建立子目錄（如 `src/Application/Features/UserManagement/`）。
@@ -103,6 +103,8 @@ tests/
 ### Domain 層
 
 - Entity 使用 `public` 屬性，但建構子或方法控制狀態變更。
+- Entity 實作私有建構子與工廠方法（如 `User.Create`），確保實體完整性。
+- 商業邏輯透過方法實作（如 `User.UpdateProfile`、`User.Activate`），不直接設定屬性。
 - Value Object 實作 `IEquatable<T>` 與 `==`/`!=` 運算子。
 - 領域事件（Domain Events）放在 `Domain/Events/` 目錄。
 
@@ -134,3 +136,20 @@ tests/
 - 原則上不使用 `object` 作為參數或傳回型別。
 - 禁止在 Controller 中直接存取 `DbContext`，應透過 Repository 或 Service。
 - 禁止在 Application/Domain 層使用 `HttpContext` 或 `IHttpContextAccessor`，應透過參數傳遞必要資訊。
+
+## 關鍵模式範例
+
+- **Entity 建立**：使用靜態工廠方法，如 `User.Create(username, email, passwordHash, role)`，確保驗證與初始化。
+- **狀態變更**：透過方法如 `user.UpdateProfile(...)`，而非直接設定屬性。
+- **Repository 介面**：所有方法為 `async Task`，接受 `CancellationToken`，如 `Task<User?> GetByIdAsync(Guid id, CancellationToken ct)`。
+- **命名空間**：`AI_DEMO.Domain.Entities`、`AI_DEMO.Domain.Interfaces` 等。
+- **專案設定**：啟用 `<Nullable>enable</Nullable>` 與 `<ImplicitUsings>enable</ImplicitUsings>`。
+
+## 開發工作流程
+
+- **建置**：`dotnet build`
+- **執行**：`dotnet run`，預設在 http://localhost:5001
+- **測試**：尚未實作
+- **格式化**：使用 EditorConfig，自動格式化。
+
+此文件將隨專案發展更新。目前專注於 Domain 層的 DDD 實作模式。
