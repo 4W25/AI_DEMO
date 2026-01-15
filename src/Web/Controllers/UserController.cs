@@ -96,6 +96,11 @@ public class UserController : Controller
         if (response.IsSuccessStatusCode)
         {
             var user = await response.Content.ReadFromJsonAsync<UserDto>();
+            if (user == null)
+            {
+                TempData["Error"] = "無法讀取使用者資料。";
+                return RedirectToAction(nameof(Index));
+            }
             var model = new UpdateUserCommand(id, user.Username, user.Email, user.Role, user.IsActive);
             return View(model);
         }

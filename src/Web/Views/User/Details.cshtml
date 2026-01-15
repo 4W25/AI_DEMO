@@ -1,0 +1,82 @@
+@model AI_DEMO.Web.DTOs.UserDto
+
+@{
+    ViewData["Title"] = "使用者詳細資訊";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>使用者詳細資訊</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">首頁</a></li>
+                        <li class="breadcrumb-item"><a href="/User">使用者管理</a></li>
+                        <li class="breadcrumb-item active">詳細資訊</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">使用者詳細資訊</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">帳號</dt>
+                    <dd class="col-sm-9">@Model.Username</dd>
+
+                    <dt class="col-sm-3">電子郵件</dt>
+                    <dd class="col-sm-9">@Model.Email</dd>
+
+                    <dt class="col-sm-3">角色</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Role == AI_DEMO.Domain.Enums.UserRole.Admin)
+                        {
+                            <span class="badge badge-primary">Admin</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-secondary">User</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">狀態</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge badge-success">啟用</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">停用</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">建立時間</dt>
+                    <dd class="col-sm-9">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+
+                    <dt class="col-sm-3">最後更新時間</dt>
+                    <dd class="col-sm-9">@(Model.UpdatedAt.HasValue ? Model.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") : "無")</dd>
+                </dl>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <a href="/User" class="btn btn-secondary">返回列表</a>
+                <a href="/User/Edit/@Model.Id" class="btn btn-primary">編輯</a>
+            </div>
+        </div>
+        <!-- /.card -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
