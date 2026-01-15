@@ -40,6 +40,19 @@ builder.Services.AddHttpClient("API", client =>
     client.BaseAddress = new Uri("http://localhost:5001"); // 假設本機 API 地址
 });
 
+// 註冊 MVC 與 API 控制器
+builder.Services.AddControllersWithViews();
+
+// 註冊 MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+// 註冊 AutoMapper
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+// 註冊應用程式服務
+builder.Services.AddScoped<AI_DEMO.Domain.Interfaces.IUserRepository, AI_DEMO.Infrastructure.Data.Repositories.UserRepository>();
+builder.Services.AddScoped<AI_DEMO.Domain.Interfaces.IPasswordHasher, AI_DEMO.Infrastructure.Services.PasswordHasher>();
+
 var app = builder.Build();
 
 // 使用認證中介軟體
@@ -49,5 +62,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet("/", () => "Hello World!");
+
+app.MapControllers();
 
 app.Run();

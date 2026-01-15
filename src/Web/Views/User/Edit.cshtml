@@ -1,0 +1,119 @@
+@model AI_DEMO.Application.Features.UserManagement.Commands.UpdateUserCommand
+
+@{
+    ViewData["Title"] = "編輯使用者";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>編輯使用者</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">首頁</a></li>
+                        <li class="breadcrumb-item"><a href="/User">使用者管理</a></li>
+                        <li class="breadcrumb-item active">編輯使用者</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">編輯使用者</h3>
+            </div>
+            <!-- /.card-header -->
+            <form asp-action="Edit" method="post" id="editForm">
+                <input type="hidden" asp-for="UserId" />
+                <div class="card-body">
+                    <div class="form-group">
+                        <label asp-for="Username">帳號</label>
+                        <input asp-for="Username" class="form-control" placeholder="輸入帳號" required />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                        <small class="form-text text-muted">帳號長度 3-50 字元，僅允許英數字與底線。</small>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email">電子郵件</label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="輸入電子郵件" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Role">角色</label>
+                        <select asp-for="Role" class="form-control" required>
+                            <option value="">請選擇角色</option>
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="IsActive" name="IsActive" value="true" checked="@Model.IsActive" />
+                            <label class="custom-control-label" for="IsActive">啟用狀態</label>
+                        </div>
+                        <span asp-validation-for="IsActive" class="text-danger"></span>
+                        <small class="form-text text-muted">勾選表示帳號啟用，未勾選表示停用。</small>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success">儲存</button>
+                    <a href="/User" class="btn btn-secondary">返回列表</a>
+                </div>
+            </form>
+        </div>
+        <!-- /.card -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // 初始化 jQuery Validation
+            $('#editForm').validate({
+                rules: {
+                    Username: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 50,
+                        pattern: /^[a-zA-Z0-9_]+$/
+                    },
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+                    Role: {
+                        required: true
+                    }
+                },
+                messages: {
+                    Username: {
+                        required: '請輸入帳號',
+                        minlength: '帳號長度至少 3 字元',
+                        maxlength: '帳號長度不可超過 50 字元',
+                        pattern: '帳號僅允許英數字與底線'
+                    },
+                    Email: {
+                        required: '請輸入電子郵件',
+                        email: '請輸入有效的電子郵件地址'
+                    },
+                    Role: {
+                        required: '請選擇角色'
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    error.insertAfter(element);
+                }
+            });
+        });
+    </script>
+}

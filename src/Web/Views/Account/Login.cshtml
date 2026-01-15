@@ -1,0 +1,94 @@
+@{
+    ViewData["Title"] = "登入";
+}
+
+<div class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <b>AI_DEMO</b> 系統
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">登入以開始您的作業階段</p>
+
+      <form id="loginForm">
+        <div class="input-group mb-3">
+          <input type="text" id="usernameOrEmail" class="form-control" placeholder="帳號或電子郵件" required>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" id="password" class="form-control" placeholder="密碼" required>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="remember">
+              <label for="remember">
+                記住我
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block">登入</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      <p class="mb-1">
+        <a href="#">忘記密碼？</a>
+      </p>
+      <p class="mb-0">
+        <a href="/Account/Register" class="text-center">註冊新帳號</a>
+      </p>
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                var usernameOrEmail = $('#usernameOrEmail').val();
+                var password = $('#password').val();
+                var remember = $('#remember').is(':checked');
+
+                // 呼叫 /api/auth/login（假設 API 存在）
+                $.ajax({
+                    url: '/api/auth/login',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        usernameOrEmail: usernameOrEmail,
+                        password: password,
+                        remember: remember
+                    }),
+                    success: function(response) {
+                        // 儲存 token（假設 response 包含 token）
+                        localStorage.setItem('jwtToken', response.token);
+                        // 導向 /User/Index
+                        window.location.href = '/User/Index';
+                    },
+                    error: function(xhr) {
+                        // 使用 Toastr 顯示錯誤訊息
+                        toastr.error('登入失敗：' + xhr.responseJSON?.message || '未知錯誤');
+                    }
+                });
+            });
+        });
+    </script>
+}
