@@ -5,6 +5,35 @@
 
 ---
 
+## 準備專案架構
+建立一個新的 ASP.NET Core 10 MVC 網站專案，使用 C#，並符合以下需求：
+
+專案設定
+
+使用預設的 dotnet new mvc 範本（不要加入額外功能，保持乾淨的起始專案）。
+
+目標框架為 .NET 10，語言使用 C#。
+
+SQLite 資料庫
+
+在專案根目錄下建立一個資料夾（例如 App_Data 或 Data），在其中加入一個本機 SQLite 資料庫檔案，檔名為 AppData.db，資料庫可以是空的（尚未建立任何資料表）。
+
+加入使用 SQLite 所需的 Entity Framework Core 套件（例如 Microsoft.EntityFrameworkCore.Sqlite）。
+
+組態設定
+
+在 appsettings.json 中加入預設連線字串區段，類似如下（依實際建立的資料庫路徑調整）：
+
+"ConnectionStrings": { "DefaultConnection": "Data Source=App_Data/AppData.db" }
+
+在 Program.cs（或 .NET 10 的啟動程式碼）中，設定 DbContext 使用組態中的 DefaultConnection SQLite 連線字串。
+
+程式碼風格
+
+保持專案最小化：只保留 MVC 範本預設產生的 Home 控制器與檢視，再加上一個使用 SQLite 的 EF Core DbContext 類別，目前先不要建立任何實體 (entity) 模型。
+
+使用清楚的資料夾結構，並在程式碼中加上註解，說明未來要在何處新增實體模型與建立 migrations。
+
 ## 一、Domain 層 Prompts
 
 ### 1. 建立 User Entity
